@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerVerse — Your Career, Mapped</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+ 
+    --navy-950:#080e1f;
+    --navy-900:#0c1630;
+    --navy-800:#121e42;
+    --navy-700:#1a2a54;
+    --gold:#f2a65a;
+    --gold-dim:#f2a65a55;
+    --teal:#3ed7c4;
+    --ink:#e9edf7;
+    --ink-dim:#9aa6c4;
+    --line:#26325c;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:radial-gradient(circle at 20% 0%, #101c3c 0%, var(--navy-950) 55%);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    padding-bottom:80px;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 24px;}
+
+  /* HERO */
+  header.hero{padding:64px 24px 48px; text-align:left; max-width:960px; margin:0 auto;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+    color:var(--teal); text-transform:uppercase; display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{content:"●"; color:var(--gold); font-size:9px;}
+  h1{
+    font-family:'Sora',sans-serif; font-weight:800; font-size:clamp(34px,5vw,54px);
+    line-height:1.05; margin-top:14px; letter-spacing:-.02em;
+  }
+  h1 span{color:var(--gold);}
+  .sub{color:var(--ink-dim); font-size:17px; margin-top:16px; max-width:560px; line-height:1.55;}
+
+  /* FORM CARD */
+  .card{
+    background:linear-gradient(180deg,var(--navy-800),var(--navy-900));
+    border:1px solid var(--line); border-radius:18px; padding:32px;
+    margin:20px auto 0; max-width:960px;
+  }
+  .card h2{font-family:'Sora',sans-serif; font-size:20px; font-weight:700; margin-bottom:4px;}
+  .card .hint{color:var(--ink-dim); font-size:13.5px; margin-bottom:22px;}
+  label{font-size:12.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.06em; font-weight:600; display:block; margin-bottom:8px;}
+  select, input[type=text]{
+    width:100%; background:var(--navy-950); border:1px solid var(--line); color:var(--ink);
+    padding:12px 14px; border-radius:10px; font-size:15px; font-family:'Inter',sans-serif;
+    outline:none; transition:border-color .15s;
+  }
+  select:focus, input:focus{border-color:var(--gold);}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;}
+  @media(max-width:640px){.row{grid-template-columns:1fr;}}
+
+  .skills-tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+  .tag{
+    padding:8px 14px; border-radius:100px; border:1px solid var(--line);
+    background:var(--navy-950); font-size:13.5px; cursor:pointer; color:var(--ink-dim);
+    transition:.15s; user-select:none;
+  }
+  .tag:hover{border-color:var(--gold-dim);}
+  .tag.active{background:var(--gold); color:var(--navy-950); border-color:var(--gold); font-weight:600;}
+
+  button.cta{
+    margin-top:26px; background:var(--gold); color:var(--navy-950); border:none;
+    padding:14px 26px; border-radius:10px; font-weight:700; font-size:15px; cursor:pointer;
+    font-family:'Sora',sans-serif; transition:transform .1s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  button.cta:hover{transform:translateY(-1px);}
+  button.cta:active{transform:translateY(0);}
+
+  /* RESULTS */
+  #results{display:none; margin-top:36px;}
+  .results-grid{display:grid; grid-template-columns:220px 1fr; gap:24px; align-items:start;}
+  @media(max-width:720px){.results-grid{grid-template-columns:1fr;}}
+
+  .score-box{
+    background:linear-gradient(180deg,var(--navy-800),var(--navy-900));
+    border:1px solid var(--line); border-radius:18px; padding:26px; text-align:center;
+  }
+  .score-box .label{font-size:12px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.08em; margin-bottom:14px;}
+  .score-num{font-family:'Sora',sans-serif; font-weight:800; font-size:40px; color:var(--teal);}
+  .score-num span{font-size:18px; color:var(--ink-dim); font-weight:600;}
+  .score-note{font-size:12.5px; color:var(--ink-dim); margin-top:10px; line-height:1.5;}
+
+  .route-card{
+    background:linear-gradient(180deg,var(--navy-800),var(--navy-900));
+    border:1px solid var(--line); border-radius:18px; padding:28px;
+  }
+  .route-card h3{font-family:'Sora',sans-serif; font-size:18px; margin-bottom:2px;}
+  .route-card .sub2{color:var(--ink-dim); font-size:13px; margin-bottom:22px;}
+
+  .milestone{display:flex; gap:16px; position:relative; padding-bottom:26px;}
+  .milestone:last-child{padding-bottom:0;}
+  .milestone::before{
+    content:""; position:absolute; left:11px; top:26px; bottom:0; width:2px;
+    background:repeating-linear-gradient(180deg,var(--line) 0 4px, transparent 4px 8px);
+  }
+  .milestone:last-child::before{display:none;}
+  .node{
+    width:24px; height:24px; border-radius:50%; border:2px solid var(--gold);
+    background:var(--navy-950); flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; color:var(--gold); cursor:pointer; transition:.15s;
+  }
+  .node.done{background:var(--gold); color:var(--navy-950);}
+  .milestone-body{padding-top:1px;}
+  .milestone-title{font-weight:600; font-size:15px;}
+  .milestone-desc{color:var(--ink-dim); font-size:13.5px; margin-top:3px; line-height:1.5;}
+  .milestone-done .milestone-title{color:var(--ink-dim); text-decoration:line-through;}
+
+  footer{text-align:center; color:var(--ink-dim); font-size:12.5px; margin-top:60px; font-family:'JetBrains Mono',monospace;}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="eyebrow">AI Career Operating System</div>
+  <h1>Your career,<br><span>mapped</span> like a route.</h1>
+  <p class="sub">Tell CareerVerse where you are and where you want to go. It plots the path — milestones, skills, and the next right step — the way a GPS plots a road.</p>
+</header>
+
+<div class="card">
+  <h2>Plot my route</h2>
+  <p class="hint">This is a live demo — the roadmap engine below runs entirely in your browser.</p>
+
+  <div class="row">
+    <div>
+      <label>Dream career</label>
+      <select id="career">
+        <option value="cybersecurity">Cybersecurity Analyst</option>
+        <option value="swe">Software Engineer</option>
+        <option value="data">Data Scientist</option>
+        <option value="pm">Product Manager</option>
+        <option value="finance">Finance / IB Analyst</option>
+      </select>
+    </div>
+    <div>
+      <label>Year of study</label>
+      <select id="year">
+        <option>1st Year</option>
+        <option selected>2nd Year</option>
+        <option>3rd Year</option>
+        <option>Final Year</option>
+      </select>
+    </div>
+  </div>
+
+  <label>Current skills (tap to select)</label>
+  <div class="skills-tags" id="skillTags"></div>
+
+  <button class="cta" onclick="generateRoute()">⚡ Generate My AI Career GPS</button>
+</div>
+
+<div id="results" class="wrap">
+  <div class="results-grid">
+    <div class="score-box">
+      <div class="label">Profile Readiness</div>
+      <div class="score-num" id="scoreNum">0<span>/100</span></div>
+      <div class="score-note" id="scoreNote">Based on skills matched to this role.</div>
+    </div>
+    <div class="route-card">
+      <h3 id="routeTitle">Your Roadmap</h3>
+      <div class="sub2">Tap a stop to mark it complete — score updates live.</div>
+      <div id="milestoneList"></div>
+    </div>
+  </div>
+</div>
+
+<footer>CAREERVERSE // DEMO BUILD — roadmap logic runs locally, no data leaves this page</footer>
+
+<script>
+const SKILL_POOL = ["Python","Networking Basics","Linux","SQL","Public Speaking","Excel","Git/GitHub","Data Structures","Statistics","Communication","Figma","Financial Modeling"];
+
+const ROADMAPS = {
+  cybersecurity: {
+    title: "Route to: Cybersecurity Analyst",
+    requiredSkills: ["Networking Basics","Linux","Python","SQL"],
+    milestones: [
+      {title:"Learn networking fundamentals", desc:"TCP/IP, DNS, subnetting — the base layer for everything else."},
+      {title:"Get hands-on with Linux", desc:"Command line fluency; set up a home lab or VM."},
+      {title:"Build one real security project", desc:"e.g. a vulnerability scanner, log analyzer, or secure exam portal."},
+      {title:"Earn Security+ or equivalent", desc:"Entry-level cert that recruiters actually screen for."},
+      {title:"Apply to CTFs / bug bounty basics", desc:"Practical proof of skill beyond coursework."},
+      {title:"Target internship applications", desc:"SOC analyst, security intern, or IT security roles."}
+    ]
+  },
+  swe: {
+    title: "Route to: Software Engineer",
+    requiredSkills: ["Python","Data Structures","Git/GitHub","SQL"],
+    milestones: [
+      {title:"Master data structures & algorithms", desc:"The screen every SWE interview starts with."},
+      {title:"Build 2–3 full-stack projects", desc:"Something with a real backend, database, and deployment."},
+      {title:"Get comfortable with Git & collaboration", desc:"PRs, branches, code review etiquette."},
+      {title:"Contribute to open source", desc:"Even small PRs signal real-world readiness."},
+      {title:"Practice mock technical interviews", desc:"Timed problem-solving under pressure."},
+      {title:"Apply to SWE internships", desc:"Target 20+ applications with a tailored resume per role."}
+    ]
+  },
+  data: {
+    title: "Route to: Data Scientist",
+    requiredSkills: ["Python","Statistics","SQL","Data Structures"],
+    milestones: [
+      {title:"Solidify statistics fundamentals", desc:"Distributions, hypothesis testing, regression."},
+      {title:"Learn Python data stack", desc:"pandas, numpy, matplotlib — daily-use tools."},
+      {title:"Complete an end-to-end ML project", desc:"From raw data to a deployed model or dashboard."},
+      {title:"Get fluent in SQL", desc:"Real interviews test query-writing under time pressure."},
+      {title:"Enter a Kaggle competition", desc:"Portfolio proof + exposure to messy real data."},
+      {title:"Apply to data/analytics internships", desc:"Target roles that mention 'entry-level' or 'intern'."}
+    ]
+  },
+  pm: {
+    title: "Route to: Product Manager",
+    requiredSkills: ["Communication","Public Speaking","Excel","Figma"],
+    milestones: [
+      {title:"Learn PM fundamentals", desc:"Prioritization frameworks, user stories, roadmapping."},
+      {title:"Shadow or run a small project", desc:"CSI committee work counts — real stakeholder management."},
+      {title:"Get comfortable with data", desc:"Basic SQL/Excel to read metrics, not just present them."},
+      {title:"Build a case study", desc:"Pick a product, critique it, propose a redesign with reasoning."},
+      {title:"Sharpen communication & pitching", desc:"PM interviews are as much about clarity as ideas."},
+      {title:"Apply to APM / PM internship programs", desc:"Many companies run dedicated intern tracks."}
+    ]
+  },
+  finance: {
+    title: "Route to: Finance / IB Analyst",
+    requiredSkills: ["Excel","Financial Modeling","Statistics","Communication"],
+    milestones: [
+      {title:"Learn financial statement basics", desc:"Income statement, balance sheet, cash flow — cold."},
+      {title:"Get fluent in Excel modeling", desc:"DCF, comps, LBO basics."},
+      {title:"Follow markets actively", desc:"Read a financial newsletter daily; form real opinions."},
+      {title:"Complete a valuation project", desc:"Pick a real company, build a model, defend your thesis."},
+      {title:"Network with alumni in finance", desc:"Informational interviews open doors coursework can't."},
+      {title:"Apply to summer analyst programs", desc:"Deadlines are early — track them closely."}
+    ]
+  }
+};
+
+const tagsEl = document.getElementById('skillTags');
+let selectedSkills = new Set();
+SKILL_POOL.forEach(skill=>{
+  const el = document.createElement('div');
+  el.className='tag'; el.textContent=skill;
+  el.onclick=()=>{ el.classList.toggle('active'); selectedSkills.has(skill)?selectedSkills.delete(skill):selectedSkills.add(skill); };
+  tagsEl.appendChild(el);
+});
+
+let currentDoneCount = 0;
+let currentTotal = 0;
+let currentRequired = [];
+
+function computeScore(){
+  const matched = currentRequired.filter(s=>selectedSkills.has(s)).length;
+  const skillPct = currentRequired.length ? matched/currentRequired.length : 0;
+  const progressPct = currentTotal ? currentDoneCount/currentTotal : 0;
+  const score = Math.round(skillPct*55 + progressPct*45);
+  return score;
+}
+
+function renderScore(){
+  const score = computeScore();
+  document.getElementById('scoreNum').innerHTML = score + '<span>/100</span>';
+  const note = document.getElementById('scoreNote');
+  if(score < 30) note.textContent = "Early stage — focus on core skills first.";
+  else if(score < 65) note.textContent = "Solid start — keep closing skill gaps.";
+  else note.textContent = "Strong readiness — you're internship-competitive.";
+}
+
+function generateRoute(){
+  const key = document.getElementById('career').value;
+  const data = ROADMAPS[key];
+  currentRequired = data.requiredSkills;
+  currentTotal = data.milestones.length;
+  currentDoneCount = 0;
+
+  document.getElementById('routeTitle').textContent = data.title;
+  const list = document.getElementById('milestoneList');
+  list.innerHTML = '';
+
+  data.milestones.forEach((m, i)=>{
+    const row = document.createElement('div');
+    row.className = 'milestone';
+    row.innerHTML = `
+      <div class="node" data-idx="${i}">${i+1}</div>
+      <div class="milestone-body">
+        <div class="milestone-title">${m.title}</div>
+        <div class="milestone-desc">${m.desc}</div>
+      </div>`;
+    const node = row.querySelector('.node');
+    node.onclick = ()=>{
+      const done = node.classList.toggle('done');
+      row.classList.toggle('milestone-done', done);
+      currentDoneCount += done ? 1 : -1;
+      renderScore();
+    };
+    list.appendChild(row);
+  });
+
+  document.getElementById('results').style.display='block';
+  renderScore();
+  document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+</body>
+</html>
