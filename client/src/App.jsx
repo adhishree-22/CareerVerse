@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
-const API = "http://localhost:5000";
+const API = "https://career-verse-n3q1.vercel.app";
 
 const SKILL_POOL = ["Python", "Networking Basics", "Linux", "SQL", "Public Speaking", "Excel", "Git/GitHub", "Data Structures", "Statistics", "Communication", "Figma", "Financial Modeling"];
 const STUDY_LEVELS = [
